@@ -13,7 +13,7 @@
 *.old
 *.db
 *.files
-*/src/
-*/pkg/
+src/
+pkg/
 vkd3d/
 vkd3d-staging/
