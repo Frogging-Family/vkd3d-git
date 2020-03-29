@@ -58,7 +58,7 @@ makedepends=('git' 'autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex'
 
 optdepends=('schedtool')
 
-source=("$_vkd3dsrcdir"::"git+${_vkd3d_source}.git${_vkd3d_commit}"
+source=("$_vkd3dsrcdir"::"git+${_vkd3d_source}${_vkd3d_commit}"
 )
 
 makedepends=(${makedepends[@]} ${depends[@]})
@@ -140,7 +140,7 @@ prepare() {
 
 	# Community patches
 	if [ -n "$_community_patches" ]; then
-	  _community_patches=($_community_patches)
+	    _community_patches=($_community_patches)
 	  for _p in ${_community_patches[@]}; do
 	    ln -s "$_where"/../community-patches/vkd3d-git/$_p "$_where"/
 	  done
