@@ -6,3 +6,11 @@ You'll need https://github.com/Tk-Glitch/PKGBUILDS/tree/master/spirv-tools-git t
 
 You can use your own vkd3d patches by putting them in the same folder as the PKGBUILD and giving them the .myvkd3dpatch extension.
 You can also revert vkd3d patches by putting them in the same folder as the PKGBUILD and giving them the .myvkd3drevert extension.
+
+
+```
+git clone https://github.com/Frogging-Family/vkd3d-git.git
+cd vkd3d-git
+makepkg -si
+```
+
