@@ -22,7 +22,7 @@ _where=$PWD # track basedir as different Arch based distros are moving srcdir ar
 source "$_where"/customization.cfg
 
 pkgname=('vkd3d-tkg-git' 'lib32-vkd3d-tkg-git')
-pkgver=4e3ea62
+pkgver=r2188.4e3ea62
 pkgrel=1
 
 # Load external configuration file if present. Available variable values will overwrite customization.cfg ones.
@@ -127,10 +127,9 @@ user_patcher() {
 pkgver() {
 	# retrieve current version
 	cd "${srcdir}/${_vkd3dsrcdir}"
-	local _vkd3dVer="$(git describe --always --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^//;s/\.rc/rc/')"
 
 	# version string
-	printf '%s' "${_vkd3dVer#vkd3d.}"
+	echo $(git describe --long 2>/dev/null || printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)") | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/vkd3d.//g'
 }
 
 prepare() {
