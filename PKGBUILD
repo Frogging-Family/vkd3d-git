@@ -53,7 +53,7 @@ depends=(
 makedepends=('git' 'autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex'
     'gcc>=4.5.0-2' 'spirv-headers-git'
     'vulkan-headers' 'vulkan-icd-loader'
-    'lib32-vulkan-icd-loader'
+    'lib32-vulkan-icd-loader' 'wine'
 )
 
 optdepends=('schedtool')
