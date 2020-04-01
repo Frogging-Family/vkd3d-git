@@ -1,6 +1,6 @@
-# VKD3D - git version, multilib with userpatches support
+# VKD3D (HansKristian & Doitsujin fork edition :frog: ) - git version, multilib with userpatches support
 
-https://source.winehq.org/git/vkd3d.git/
+https://github.com/HansKristian-Work/vkd3d - Fork of https://source.winehq.org/git/vkd3d.git/ (to build that version, see customization.cfg)
 
 You'll need https://github.com/Tk-Glitch/PKGBUILDS/tree/master/spirv-tools-git to build this package
 
