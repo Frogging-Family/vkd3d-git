@@ -18,7 +18,7 @@ plain '   /dNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNd/'
 plain '    `:sdNNNNNNNNNNNNNNNNNNNNNNNNNds:`'
 plain '       `-+shdNNNNNNNNNNNNNNNdhs+-`'
 plain '             `.-:///////:-.`'
-_where=$PWD # track basedir as different Arch based distros are moving srcdir around
+_where="$PWD" # track basedir as different Arch based distros are moving srcdir around
 source "$_where"/customization.cfg
 
 pkgname=('vkd3d-tkg-git' 'lib32-vkd3d-tkg-git')
