@@ -22,7 +22,7 @@ _where="$PWD" # track basedir as different Arch based distros are moving srcdir 
 source "$_where"/customization.cfg
 
 pkgname=('vkd3d-tkg-git' 'lib32-vkd3d-tkg-git')
-pkgver=r2200.c44b168
+pkgver=r2226.d6204bb
 pkgrel=1
 
 # Load external configuration file if present. Available variable values will overwrite customization.cfg ones.
@@ -139,7 +139,10 @@ prepare() {
 
 	# Community patches
 	if [ -n "$_community_patches" ]; then
-	    _community_patches=($_community_patches)
+      if [ ! -d "$_where/../community-patches" ]; then
+        cd "$_where/.." && git clone https://github.com/Frogging-Family/community-patches.git && cd "${srcdir}/${_vkd3dsrcdir}"
+      fi
+	  _community_patches=($_community_patches)
 	  for _p in ${_community_patches[@]}; do
 	    ln -s "$_where"/../community-patches/vkd3d-git/$_p "$_where"/
 	  done
