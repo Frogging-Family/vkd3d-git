@@ -13,6 +13,7 @@
 *.old
 *.db
 *.files
+*.myvkd3dpatch
 src/
 pkg/
 vkd3d/
