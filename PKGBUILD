@@ -22,7 +22,7 @@ _where="$PWD" # track basedir as different Arch based distros are moving srcdir 
 source "$_where"/customization.cfg
 
 pkgname=('vkd3d-tkg-git' 'lib32-vkd3d-tkg-git')
-pkgver=r2329.8588b46
+pkgver=r2349.71034ac
 pkgrel=1
 
 # Load external configuration file if present. Available variable values will overwrite customization.cfg ones.
