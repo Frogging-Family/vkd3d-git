@@ -22,7 +22,7 @@ _where="$PWD" # track basedir as different Arch based distros are moving srcdir 
 source "$_where"/customization.cfg
 
 pkgname=('vkd3d-tkg-git' 'lib32-vkd3d-tkg-git')
-pkgver=r2349.71034ac
+pkgver=r2353.9875d65
 pkgrel=1
 
 # Load external configuration file if present. Available variable values will overwrite customization.cfg ones.
@@ -196,7 +196,7 @@ build() {
 }
 
 package_vkd3d-tkg-git() {
-  provides=("vkd3d=$pkgver")
+  provides=("vkd3d=$pkgver" "vkd3d-fork=$pkgver")
   conflicts=("vkd3d")
 
 	msg2 'Packaging vkd3d 64...'
@@ -205,7 +205,7 @@ package_vkd3d-tkg-git() {
 }
 
 package_lib32-vkd3d-tkg-git() {
-  provides=("lib32-vkd3d=$pkgver")
+  provides=("lib32-vkd3d=$pkgver" "lib32-vkd3d-fork=$pkgver")
   conflicts=("lib32-vkd3d")
 
 	msg2 'Packaging vkd3d 32...'
