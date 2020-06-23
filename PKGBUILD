@@ -213,8 +213,8 @@ build() {
     cd "${srcdir}"
 
     # 64
-    export CC="gcc -m64 -mstackrealign"
-    export CXX="g++ -m64 -mstackrealign"
+    export CC="gcc -m64"
+    export CXX="g++ -m64"
 
     arch-meson "${srcdir}/${_vkd3dsrcdir}" "${srcdir}"/vkd3d-tkg-git \
       --libdir lib \
