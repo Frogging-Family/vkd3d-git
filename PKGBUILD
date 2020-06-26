@@ -22,7 +22,7 @@ _where="$PWD" # track basedir as different Arch based distros are moving srcdir 
 source "$_where"/customization.cfg
 
 pkgname=('vkd3d-tkg-git' 'lib32-vkd3d-tkg-git')
-pkgver=r2398.8c216e6
+pkgver=r2424.12b71b9
 pkgrel=1
 
 # Load external configuration file if present. Available variable values will overwrite customization.cfg ones.
@@ -46,10 +46,6 @@ pkgdesc='Wine d3d12 to vulkan translation lib, git version'
 url='https://source.winehq.org/git/vkd3d.git'
 arch=('x86_64')
 license=('LGPL')
-depends=(
-    'spirv-tools' 'lib32-spirv-tools'
-)
-
 makedepends=('git' 'autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex'
     'gcc>=4.5.0-2' 'spirv-headers'
     'vulkan-headers' 'vulkan-icd-loader'
@@ -181,15 +177,14 @@ build() {
     cd "${srcdir}/${_vkd3dsrcdir}"
     ./autogen.sh
 
-    export CC='gcc -m32'
-    export CXX='g++ -m32'
+    export CC='gcc -m32 -mstackrealign'
+    export CXX='g++ -m32 -mstackrealign'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
     cd  "${srcdir}"/lib32-vkd3d-tkg-git
     ../${_vkd3dsrcdir}/configure \
       --prefix=/usr \
-      --libdir=/usr/lib32 \
-      --with-spirv-tools
+      --libdir=/usr/lib32
 
     # make using all available threads
     schedtool -B -n 1 -e ionice -n 1 make -j$(nproc) -C "${srcdir}"/lib32-vkd3d-tkg-git || make -j$(nproc) -C "${srcdir}"/lib32-vkd3d-tkg-git
@@ -201,8 +196,7 @@ build() {
     cd  "${srcdir}"/vkd3d-tkg-git
     ../${_vkd3dsrcdir}/configure \
       --prefix=/usr \
-      --libdir=/usr/lib \
-      --with-spirv-tools
+      --libdir=/usr/lib
 
     # make using all available threads
     schedtool -B -n 1 -e ionice -n 1 make -j$(nproc) -C "${srcdir}"/vkd3d-tkg-git || make -j$(nproc) -C "${srcdir}"/vkd3d-tkg-git
