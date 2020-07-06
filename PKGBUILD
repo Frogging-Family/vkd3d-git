@@ -21,10 +21,6 @@ plain '             `.-:///////:-.`'
 _where="$PWD" # track basedir as different Arch based distros are moving srcdir around
 source "$_where"/customization.cfg
 
-pkgname=('vkd3d-tkg-git' 'lib32-vkd3d-tkg-git')
-pkgver=r2424.12b71b9
-pkgrel=1
-
 # Load external configuration file if present. Available variable values will overwrite customization.cfg ones.
 if [ -e "$_EXT_CONFIG_PATH" ]; then
   source "$_EXT_CONFIG_PATH" && msg2 "External configuration file $_EXT_CONFIG_PATH will be used to override customization.cfg values.\n"
@@ -36,6 +32,16 @@ else
   _vkd3dsrcdir='vkd3d'
   _vkd3d_source='git://source.winehq.org/git/vkd3d'
 fi
+
+if [ "$_vkd3d_source" = "https://github.com/HansKristian-Work/vkd3d-proton" ]; then
+  _pkgnameprefix="vkd3d-proton-tkg-git"
+else
+  _pkgnameprefix="vkd3d-tkg-git"
+fi
+
+pkgname=("$_pkgnameprefix" "lib32-$_pkgnameprefix")
+pkgver=r2476.cb1da02
+pkgrel=1
 
 # custom vkd3d commit to pass to git
 if [ -n "$_vkd3d_commit" ]; then
@@ -52,7 +58,7 @@ makedepends=('git' 'autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex'
     'lib32-vulkan-icd-loader' 'wine'
 )
 
-if [ "$_vkd3d_source" = "https://github.com/HansKristian-Work/vkd3d" ] && [ "$_fork_disable_meson" = "false" ]; then
+if [ "$_vkd3d_source" = "https://github.com/HansKristian-Work/vkd3d-proton" ] && [ "$_fork_disable_meson" = "false" ]; then
   makedepends+=('meson' 'ninja' 'xcb-util-keysyms' 'lib32-xcb-util-keysyms')
 fi
 
@@ -159,8 +165,8 @@ prepare() {
 	done
 
 	# create new build dirs
-	mkdir -p "${srcdir}"/vkd3d-tkg-git
-	mkdir -p "${srcdir}"/lib32-vkd3d-tkg-git
+	mkdir -p "${srcdir}"/"${_pkgnameprefix}"
+	mkdir -p "${srcdir}"/lib32-"${_pkgnameprefix}"
 	cd "$_where"
 }
 
@@ -173,7 +179,7 @@ build() {
     PATH=${CUSTOM_GCC_PATH}/bin:${CUSTOM_GCC_PATH}/lib:${CUSTOM_GCC_PATH}/include:${PATH}
   fi
 
-  if [ "$_vkd3d_source" != "https://github.com/HansKristian-Work/vkd3d" ] || [ "$_fork_disable_meson" = "true" ]; then
+  if [ "$_vkd3d_source" != "https://github.com/HansKristian-Work/vkd3d-proton" ] || [ "$_fork_disable_meson" = "true" ]; then
     cd "${srcdir}/${_vkd3dsrcdir}"
     ./autogen.sh
 
@@ -181,25 +187,25 @@ build() {
     export CXX='g++ -m32 -mstackrealign'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-    cd  "${srcdir}"/lib32-vkd3d-tkg-git
+    cd  "${srcdir}"/lib32-"${_pkgnameprefix}"
     ../${_vkd3dsrcdir}/configure \
       --prefix=/usr \
       --libdir=/usr/lib32
 
     # make using all available threads
-    schedtool -B -n 1 -e ionice -n 1 make -j$(nproc) -C "${srcdir}"/lib32-vkd3d-tkg-git || make -j$(nproc) -C "${srcdir}"/lib32-vkd3d-tkg-git
+    schedtool -B -n 1 -e ionice -n 1 make -j$(nproc) -C "${srcdir}"/lib32-"${_pkgnameprefix}" || make -j$(nproc) -C "${srcdir}"/lib32-"${_pkgnameprefix}"
 
     export CC='gcc -m64'
     export CXX='g++ -m64'
     export PKG_CONFIG_PATH='/usr/lib/pkgconfig'
 
-    cd  "${srcdir}"/vkd3d-tkg-git
+    cd  "${srcdir}"/"${_pkgnameprefix}"
     ../${_vkd3dsrcdir}/configure \
       --prefix=/usr \
       --libdir=/usr/lib
 
     # make using all available threads
-    schedtool -B -n 1 -e ionice -n 1 make -j$(nproc) -C "${srcdir}"/vkd3d-tkg-git || make -j$(nproc) -C "${srcdir}"/vkd3d-tkg-git
+    schedtool -B -n 1 -e ionice -n 1 make -j$(nproc) -C "${srcdir}"/"${_pkgnameprefix}" || make -j$(nproc) -C "${srcdir}"/"${_pkgnameprefix}"
   else
     cd "${srcdir}/${_vkd3dsrcdir}"
     git submodule update --init --recursive
@@ -210,55 +216,66 @@ build() {
     export CC="gcc -m64"
     export CXX="g++ -m64"
 
-    arch-meson "${srcdir}/${_vkd3dsrcdir}" "${srcdir}"/vkd3d-tkg-git \
+    arch-meson "${srcdir}/${_vkd3dsrcdir}" "${srcdir}"/"${_pkgnameprefix}" \
       --libdir lib \
       --buildtype release
 
-    ninja $NINJAFLAGS -C vkd3d-tkg-git
+    ninja $NINJAFLAGS -C "${_pkgnameprefix}"
 
     # 32
     export CC='gcc -m32 -mstackrealign'
     export CXX='g++ -m32 -mstackrealign'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-    arch-meson "${srcdir}/${_vkd3dsrcdir}" "${srcdir}"/lib32-vkd3d-tkg-git \
+    arch-meson "${srcdir}/${_vkd3dsrcdir}" "${srcdir}"/lib32-"${_pkgnameprefix}" \
       --libdir lib32 \
       --buildtype release
 
-    ninja $NINJAFLAGS -C lib32-vkd3d-tkg-git
+    ninja $NINJAFLAGS -C lib32-"${_pkgnameprefix}"
   fi
 }
 
-package_vkd3d-tkg-git() {
+_package_vkd3d() {
   provides=("vkd3d=$pkgver" "vkd3d-fork=$pkgver")
   conflicts=("vkd3d")
 
   msg2 'Packaging vkd3d 64...'
 
-  if [ "$_vkd3d_source" != "https://github.com/HansKristian-Work/vkd3d" ] || [ "$_fork_disable_meson" = "true" ]; then
+  if [ "$_vkd3d_source" != "https://github.com/HansKristian-Work/vkd3d-proton" ] || [ "$_fork_disable_meson" = "true" ]; then
     cd  "${srcdir}"/"${pkgname}"
     make -C "${srcdir}"/"${pkgname}" DESTDIR="${pkgdir}" install
   else
-    DESTDIR="$pkgdir" ninja $NINJAFLAGS -C vkd3d-tkg-git install
+    DESTDIR="$pkgdir" ninja $NINJAFLAGS -C "${_pkgnameprefix}" install
   fi
 }
 
-package_lib32-vkd3d-tkg-git() {
+_package_lib32-vkd3d() {
   provides=("lib32-vkd3d=$pkgver" "lib32-vkd3d-fork=$pkgver")
   conflicts=("lib32-vkd3d")
 
   msg2 'Packaging vkd3d 32...'
 
-  if [ "$_vkd3d_source" != "https://github.com/HansKristian-Work/vkd3d" ] || [ "$_fork_disable_meson" = "true" ]; then
+  if [ "$_vkd3d_source" != "https://github.com/HansKristian-Work/vkd3d-proton" ] || [ "$_fork_disable_meson" = "true" ]; then
     cd  "${srcdir}"/"${pkgname}"
     make -C "${srcdir}"/"${pkgname}" DESTDIR="${pkgdir}" install
   else
-    DESTDIR="$pkgdir" ninja $NINJAFLAGS -C lib32-vkd3d-tkg-git install
+    DESTDIR="$pkgdir" ninja $NINJAFLAGS -C lib32-"${_pkgnameprefix}" install
     mv -f "$pkgdir/usr/lib/libcm_dxil_spirv_c_shared.so" "$pkgdir/usr/lib32/" && rm -rf "$pkgdir/usr/lib"
   fi
 
   rm -rf ${pkgdir}/usr/include
 }
+
+source /dev/stdin <<EOF
+package_$_pkgnameprefix() {
+_package_vkd3d
+}
+
+package_lib32-$_pkgnameprefix() {
+_package_lib32-vkd3d
+}
+EOF
+
 md5sums=('SKIP')
 
 trap exit_cleanup EXIT
