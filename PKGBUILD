@@ -40,7 +40,7 @@ else
 fi
 
 pkgname=("$_pkgnameprefix" "lib32-$_pkgnameprefix")
-pkgver=r2476.cb1da02
+pkgver=r2602.e9aab2b8
 pkgrel=1
 
 # custom vkd3d commit to pass to git
@@ -260,7 +260,6 @@ _package_lib32-vkd3d() {
     make -C "${srcdir}"/"${pkgname}" DESTDIR="${pkgdir}" install
   else
     DESTDIR="$pkgdir" ninja $NINJAFLAGS -C lib32-"${_pkgnameprefix}" install
-    mv -f "$pkgdir/usr/lib/libcm_dxil_spirv_c_shared.so" "$pkgdir/usr/lib32/" && rm -rf "$pkgdir/usr/lib"
   fi
 
   rm -rf ${pkgdir}/usr/include
