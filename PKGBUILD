@@ -40,7 +40,7 @@ else
 fi
 
 pkgname=("$_pkgnameprefix" "lib32-$_pkgnameprefix")
-pkgver=r2602.e9aab2b8
+pkgver=r2656.1ce14c2e
 pkgrel=1
 
 # custom vkd3d commit to pass to git
@@ -56,6 +56,7 @@ makedepends=('git' 'autoconf' 'ncurses' 'bison' 'perl' 'fontforge' 'flex'
     'gcc>=4.5.0-2' 'spirv-headers'
     'vulkan-headers' 'vulkan-icd-loader'
     'lib32-vulkan-icd-loader' 'wine'
+    'glslang' 'lib32-glslang'
 )
 
 if [ "$_vkd3d_source" = "https://github.com/HansKristian-Work/vkd3d-proton" ] && [ "$_fork_disable_meson" = "false" ]; then
