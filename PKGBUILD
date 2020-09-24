@@ -40,7 +40,7 @@ else
 fi
 
 pkgname=("$_pkgnameprefix" "lib32-$_pkgnameprefix")
-pkgver=r2656.1ce14c2e
+pkgver=r2658.72388028
 pkgrel=1
 
 # custom vkd3d commit to pass to git
@@ -264,6 +264,7 @@ _package_lib32-vkd3d() {
   fi
 
   rm -rf ${pkgdir}/usr/include
+  rm -f ${pkgdir}/usr/bin/vkd3d-compiler
 }
 
 source /dev/stdin <<EOF
