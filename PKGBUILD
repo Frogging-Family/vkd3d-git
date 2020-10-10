@@ -237,7 +237,7 @@ build() {
 }
 
 _package_vkd3d() {
-  provides=("vkd3d=$pkgver" "vkd3d-fork=$pkgver")
+  provides=("vkd3d=$pkgver")
   conflicts=("vkd3d")
 
   msg2 'Packaging vkd3d 64...'
@@ -251,7 +251,7 @@ _package_vkd3d() {
 }
 
 _package_lib32-vkd3d() {
-  provides=("lib32-vkd3d=$pkgver" "lib32-vkd3d-fork=$pkgver")
+  provides=("lib32-vkd3d=$pkgver")
   conflicts=("lib32-vkd3d")
 
   msg2 'Packaging vkd3d 32...'
