@@ -40,7 +40,7 @@ else
 fi
 
 pkgname=("$_pkgnameprefix" "lib32-$_pkgnameprefix")
-pkgver=r2668.759e21d8
+pkgver=1.2.r48.g5fb9bcd
 pkgrel=1
 
 # custom vkd3d commit to pass to git
